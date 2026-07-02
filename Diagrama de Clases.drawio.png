@@ -1,0 +1,15 @@
+#pragma once
+#include "..\classes\Cancion.h"
+
+class Nodo {
+public:
+	Cancion dato;
+	Nodo* siguiente;
+	Nodo* anterior;
+
+	Nodo(Cancion c) {
+		dato = c;
+		siguiente = nullptr;
+		anterior = nullptr;
+	}
+};
