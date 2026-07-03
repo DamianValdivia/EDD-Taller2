@@ -1,34 +1,43 @@
 #ifndef NODO_H
 #define NODO_H
 
-template <typename T>
-struct Nodo {
-    T dato;
-    Nodo* siguiente;
-    Nodo* anterior;
+class Cancion;
 
-    Nodo(const T& d) : dato(d), siguiente(nullptr), anterior(nullptr) {}
+struct NodoCancion {
+    Cancion* dato;
+    NodoCancion* siguiente;
+    NodoCancion* anterior;
+
+    NodoCancion(Cancion* d);
+    ~NodoCancion();
 };
 
-template <typename T>
-struct NodoArbol {
-    T dato;
-    NodoArbol* izquierda;
-    NodoArbol* derecha;
+struct NodoCadena {
+    char* dato;
+    NodoCadena* siguiente;
+    NodoCadena* anterior;
+
+    NodoCadena(const char* d);
+    ~NodoCadena();
+};
+
+struct NodoArbolCancion {
+    Cancion* dato;
+    NodoArbolCancion* izquierda;
+    NodoArbolCancion* derecha;
     int altura;
 
-    NodoArbol(const T& d) : dato(d), izquierda(nullptr), derecha(nullptr), altura(1) {}
+    NodoArbolCancion(Cancion* d);
+    ~NodoArbolCancion();
 };
 
 struct NodoTrie {
-    NodoTrie* hijos[36];  // 26 letras + 10 dígitos
+    NodoTrie* hijos[36];
     bool esFinPalabra;
+    int frecuencia;
 
-    NodoTrie() : esFinPalabra(false) {
-        for (int i = 0; i < 36; i++) {
-            hijos[i] = nullptr;
-        }
-    }
+    NodoTrie();
+    ~NodoTrie();
 };
 
 #endif // NODO_H
