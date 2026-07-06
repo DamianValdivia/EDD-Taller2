@@ -13,9 +13,33 @@ void HeapCancion::intercambiar(int i, int j) {
 }
 
 void HeapCancion::flotarArriba(int i) {
-    while (i > 0 && elementos[obtenerPadre(i)]->getReproducciones() < elementos[i]->getReproducciones()) {
-        intercambiar(i, obtenerPadre(i));
-        i = obtenerPadre(i);
+    while (i > 0) {
+        int padre = obtenerPadre(i);
+        bool necesitaFlotar = false;
+
+       
+        if (elementos[padre]->getReproducciones() < elementos[i]->getReproducciones()) {
+            necesitaFlotar = true;
+        }
+       
+        else if (elementos[padre]->getReproducciones() == elementos[i]->getReproducciones()) { //faltaba el ordewn alfabetico
+            int compNombre = strcmp(elementos[padre]->getNombre(), elementos[i]->getNombre());
+            if (compNombre > 0) { // El padre va después alfabéticamente, así que el menor sube
+                necesitaFlotar = true;
+            } else if (compNombre == 0) {
+                
+                if (strcmp(elementos[padre]->getArtista(), elementos[i]->getArtista()) > 0) { //sino artista
+                    necesitaFlotar = true;
+                }
+            }
+        }
+
+        if (necesitaFlotar) {
+            intercambiar(i, padre);
+            i = padre;
+        } else {
+            break;
+        }
     }
 }
 
@@ -24,11 +48,36 @@ void HeapCancion::hundirAbajo(int i) {
     int izq = obtenerHijoIzq(i);
     int der = obtenerHijoDer(i);
 
-    if (izq < tamanio && elementos[izq]->getReproducciones() > elementos[mayor]->getReproducciones()) {
-        mayor = izq;
+ 
+    if (izq < tamanio) {
+        if (elementos[izq]->getReproducciones() > elementos[mayor]->getReproducciones()) {
+            mayor = izq;
+        } else if (elementos[izq]->getReproducciones() == elementos[mayor]->getReproducciones()) {
+            int compNombre = strcmp(elementos[izq]->getNombre(), elementos[mayor]->getNombre());
+            if (compNombre < 0) {
+                mayor = izq;
+            } else if (compNombre == 0) {
+                if (strcmp(elementos[izq]->getArtista(), elementos[mayor]->getArtista()) < 0) {
+                    mayor = izq;
+                }
+            }
+        }
     }
-    if (der < tamanio && elementos[der]->getReproducciones() > elementos[mayor]->getReproducciones()) {
-        mayor = der;
+
+   
+    if (der < tamanio) {
+        if (elementos[der]->getReproducciones() > elementos[mayor]->getReproducciones()) {
+            mayor = der;
+        } else if (elementos[der]->getReproducciones() == elementos[mayor]->getReproducciones()) {
+            int compNombre = strcmp(elementos[der]->getNombre(), elementos[mayor]->getNombre());
+            if (compNombre < 0) {
+                mayor = der;
+            } else if (compNombre == 0) {
+                if (strcmp(elementos[der]->getArtista(), elementos[mayor]->getArtista()) < 0) {
+                    mayor = der;
+                }
+            }
+        }
     }
 
     if (mayor != i) {
