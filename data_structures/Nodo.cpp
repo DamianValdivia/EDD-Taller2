@@ -21,6 +21,7 @@ NodoArbolCancion::NodoArbolCancion(Cancion* d) : dato(d), izquierda(nullptr), de
 NodoArbolCancion::~NodoArbolCancion() {}
 
 NodoTrie::NodoTrie() : esFinPalabra(false), frecuencia(0) {
+    cancionOriginal[0] = '\0';
     for (int i = 0; i < 36; i++) {
         hijos[i] = nullptr;
     }
