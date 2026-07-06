@@ -3,15 +3,6 @@
 #include <cstring>
 #include <cstdlib>
 
-using namespace std;
-
-void limpiarPantalla() {
-#ifdef _WIN32
-    system("cls");
-#else
-    system("clear");
-#endif
-}
 
 int main() {
     Gestion gestion;
