@@ -35,6 +35,7 @@ struct NodoTrie {
     NodoTrie* hijos[36];
     bool esFinPalabra;
     int frecuencia;
+    char cancionOriginal[256];
 
     NodoTrie();
     ~NodoTrie();
