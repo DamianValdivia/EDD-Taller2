@@ -129,6 +129,10 @@ ListaCancion* Gestion::getCanciones() {
     return canciones;
 }
 
+Ranking* Gestion::getRanking() {
+    return ranking;
+}
+
 void Gestion::mostrarCancionesDeArtistaAlfabetico(const char* artista) {
     if (canciones->estaVacia()) return;
 
