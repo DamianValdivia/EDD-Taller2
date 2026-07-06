@@ -1,1 +1,149 @@
+DIAGRAMA UML 
+
+
+┌──────────────────────────────┐         ┌──────────────────────────────┐
+│      ListaCancion            │         │      ListaCadena             │
+├──────────────────────────────┤         ├──────────────────────────────┤
+│ - cabeza: NodoCancion*       │         │ - cabeza: NodoCadena*        │
+│ - cola: NodoCancion*         │         │ - cola: NodoCadena*          │
+│ - tamanio: int               │         │ - tamanio: int               │
+├──────────────────────────────┤         ├──────────────────────────────┤
+│ + ListaCancion()             │         │ + ListaCadena()              │
+│ + agregar(Cancion*)          │         │ + agregar(const char*)       │
+│ + agregarAlInicio(Cancion*)  │         │ + agregarAlInicio(const...)  │
+│ + eliminar(Cancion*): bool   │         │ + eliminar(const char*):bool │
+│ + obtenerCabeza()            │         │ + obtenerCabeza()            │
+│ + obtenerTamanio(): int      │         │ + obtenerTamanio(): int      │
+│ + estaVacia(): bool          │         │ + estaVacia(): bool          │
+│ + limpiar()                  │         │ + limpiar()                  │
+└──────────────────────────────┘         └──────────────────────────────┘
+▲                                          ▲
+│ usa                                      │ usa
+│                                          │
+└──────────────┬──────────────┬────────────┘
+               │              │
+               ▼              ▼
+┌──────────────────────────────────────────────────────────┐
+│                    TRIE                                  │
+├──────────────────────────────────────────────────────────┤
+│ - raiz: NodoTrie*                                        │
+├──────────────────────────────────────────────────────────┤
+│ + Trie()                                                 │
+│ + insertar(const char*): void                            │
+│ + buscar(const char*): bool                              │
+│ + buscarPorPrefijo(const char*, ListaCadena&): void      │
+│ + limpiar(): void                                        │
+│                                                          │
+│ FUNCIÓN: Búsqueda rápida por prefijo O(m)                │
+│ SOPORTA: Letras (a-z) y dígitos (0-9)                    │
+└──────────────────────────────────────────────────────────┘
+▲
+│ usa
+│
+┌──────────────────────────────────────────────────────────┐
+│              HeapCancion (Max-Heap)                      │
+├──────────────────────────────────────────────────────────┤
+│ - elementos: Cancion**                                   │
+│ - tamanio: int                                           │
+│ - capacidad: int                                         │
+├──────────────────────────────────────────────────────────┤
+│ + HeapCancion(int cap = 100)                             │
+│ + insertar(Cancion*): void                               │
+│ + extraerMaximo(): Cancion*                              │
+│ + obtenerMaximo(): Cancion*                              │
+│ + obtenerTamanio(): int                                  │
+│ + obtenerElementos(): Cancion**                          │
+│                                                          │
+│ FUNCIÓN: Ranking Top 10 por reproducciones O(log n)      │
+│ PROPIEDAD: Mayor elemento en raíz                        │
+└──────────────────────────────────────────────────────────┘
+▲
+│ usa
+│
+┌──────────────────────────────────────────────────────────┐
+│              AVLCancion (Árbol Balanceado)               │
+├──────────────────────────────────────────────────────────┤
+│ - raiz: NodoArbolCancion*                                │
+├──────────────────────────────────────────────────────────┤
+│ + AVLCancion()                                           │
+│ + insertar(Cancion*): void                               │
+│ + inOrden(ListaCancion&): void                           │
+│ + limpiar(): void                                        │
+│ + estaVacio(): bool                                      │
+│                                                          │
+│ FUNCIÓN: Ordenamiento alfabético por artista O(log n)    │
+│ PROPIEDAD: Balanceado automáticamente                    │
+│ ROTACIONES: Izq-Izq, Der-Der, Izq-Der, Der-Izq           │
+└──────────────────────────────────────────────────────────┘
+
+
+CLASES DE APOYO
+
+┌──────────────────────────────────────────────────────────┐
+│                  Busqueda                                │
+├──────────────────────────────────────────────────────────┤
+│ - trieNombres: Trie*                                     │
+│ - trieArtistas: Trie*                                    │
+│ - cancionesReferencia: ListaCancion*                     │
+├──────────────────────────────────────────────────────────┤
+│ + Busqueda()                                             │
+│ + setCancionesReferencia(ListaCancion*): void            │
+│ + indexarCancion(Cancion*): void                         │
+│ + buscarCancionesPorNombre(const char*, ListaCancion&)   │
+│ + buscarCancionesPorArtista(const char*, ListaCancion&)  │
+│                                                          │
+│ FUNCIÓN: Gestiona búsquedas usando Tries                 │
+└──────────────────────────────────────────────────────────┘
+▲
+│ usa
+└─────────────────────────────────┐
+│
+┌──────────────────────────────────────────────────────────┐
+│                  Ranking                                 │
+├──────────────────────────────────────────────────────────┤
+│ - heapCanciones: HeapCancion*                            │
+│ - heapArtistas: HeapCancion*                             │
+├──────────────────────────────────────────────────────────┤
+│ + Ranking()                                              │
+│ + agregarCancionAlRanking(Cancion*): void                │
+│ + obtenerTop10Canciones(ListaCancion&): void             │
+│ + mostrarTop10Canciones(): void                          │
+│                                                          │
+│ FUNCIÓN: Gestiona rankings usando Heaps                  │
+└──────────────────────────────────────────────────────────┘
+▲
+│ usa
+│
+┌──────────────────────────────────────────────────────────┐
+│                  Gestion (CONTROLADOR)                   │
+├──────────────────────────────────────────────────────────┤
+│ - canciones: ListaCancion*                               │
+│ - cancionesPorArtista: AVLCancion*                       │
+│ - busqueda: Busqueda*                                    │
+│ - ranking: Ranking*                                      │
+│ - proximoIdCancion: int                                  │
+├──────────────────────────────────────────────────────────┤
+│ + Gestion()                                              │
+│ + cargarCancionesDesdeArchivo(const char*): void         │
+│ + guardarCancionesEnArchivo(const char*): void           │
+│ + mostrarTodasLasCanciones(): void                       │
+│ + reproducirCancion(int): void                           │
+│ + buscarCancion(const char*): void                       │
+│ + mostrarTop10(): void                                   │
+│ + getCanciones(): ListaCancion*                          │
+│                                                          │
+│ FUNCIÓN: Orquesta todas las estructuras y funciones      │
+└──────────────────────────────────────────────────────────┘
+│
+│ usa todas las estructuras
+│
+▼
+┌──────────────────────────────────────────────────────────┐
+│                  main.cpp                                │
+├──────────────────────────────────────────────────────────┤
+│ + mostrarMenu(): void                                    │
+│ + main(): int                                            │
+│                                                          │
+│ FUNCIÓN: Interfaz de usuario en consola                  │
+└──────────────────────────────────────────────────────────┘
 
