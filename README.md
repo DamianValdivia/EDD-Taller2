@@ -51,3 +51,6 @@ R<num> - Reproducir | A<num> - Agregar a cola | A - Ver Top Artistas | V - Volve
 
 [DETALLE ARTISTA]
 R<num> - Reproducir | V - Volver al Ranking | X - Volver a Menú Principal
+### Como ejecutar:
+En consola escribir g++ main.cpp classes/*.cpp data_structures/*.cpp -o reproductor
+Luego ./reproductor
