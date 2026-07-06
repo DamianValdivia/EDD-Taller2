@@ -15,34 +15,38 @@ Este proyecto consiste en un sistema de reproducción y gestión de música desa
 
 Como no podiamos usar la libreria estándar, todas las estructuras están hechas a mano en la carpeta `data_structures`:
 
-1. **Lista Doblemente Enlazada (`Lista.h`)**: La uso para la cola de reproducción y para el registro de todas las canciones, porque me permite moverme hacia adelante y atrás con los punteros `siguiente` y `anterior`.
-2. **Árbol Trie (`Trie.h`)**: Lo uso para indexar los nombres de los temas y los artistas. Sirve para buscar súper rápido por prefijos.
+1. **Lista Doblemente Enlazada (`Lista.h`)**: La uso para la cola de reproducción y para el registro de todas las canciones.
+2. **Árbol Trie (`Trie.h`)**: Lo uso para indexar los nombres de los temas y los artistas, permitiendo búsquedas rápidas por prefijos.
 3. **Árbol AVL (`AVLCancion.h`)**: Para ordenar las canciones por artista de forma balanceada.
-4. **Max-Heap (`HeapCancion.h`)**: Lo uso para ordenar el ranking del Top 10 según la cantidad de reproducciones de cada canción.
+4. **Max-Heap (`HeapCancion.h`)**: Lo uso para ordenar el ranking del Top 10 según la cantidad de reproducciones.
 
 ---
 
-## Cómo están organizados los archivos
+## Guía del Menú y Controles
 
+Cuando ejecutas el programa, puedes utilizar los siguientes comandos para interactuar con el reproductor:
+
+### Tabla de Comandos
+| Comando | Acción que realiza |
+| :--- | :--- |
+| `W` | Reproducir o Pausar la canción actual. |
+| `Q` | Retroceder a la canción anterior en la cola. |
+| `E` | Saltar a la siguiente canción en la cola. |
+| `S` | Alternar entre modo aleatorio (Shuffle) activado o desactivado. |
+| `R` | Cambiar modo de repetición (Desactivado > R1 > RA). |
+| `A` | Abrir la vista detallada de la Cola de reproducción. |
+| `T` | Acceder al módulo de Rankings (TOP 10). |
+| `L` | Listar todas las canciones registradas en la base de datos. |
+| `X` | Guardar cambios en el archivo y salir del programa. |
+
+### Visualización del flujo de navegación
 ```text
-.
-├── main.cpp
-├── music_source.txt
-├── classes/
-│   ├── Cancion.h
-│   ├── Cancion.cpp
-│   ├── Ranking.h
-│   ├── Ranking.cpp
-│   ├── Busqueda.h
-│   ├── Busqueda.cpp
-│   ├── Gestion.h
-│   └── Gestion.cpp
-└── data_structures/
-    ├── ListaCancion.h
-    ├── ListaCancion.cpp
-    ├── AVLCancion.h
-    ├── AVLCancion.cpp
-    ├── Trie.h
-    ├── Trie.cpp
-    ├── HeapCancion.h
-    └── HeapCancion.cpp
+[MENÚ PRINCIPAL]
+=== REPRODUCTOR DE MUSICA ===
+W - Mostrar canciones | T - Ver Rankings | X - Salir
+
+[RANKING TOP 10]
+R<num> - Reproducir | A<num> - Agregar a cola | A - Ver Top Artistas | V - Volver
+
+[DETALLE ARTISTA]
+R<num> - Reproducir | V - Volver al Ranking | X - Volver a Menú Principal
