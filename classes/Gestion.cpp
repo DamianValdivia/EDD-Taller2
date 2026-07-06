@@ -1,5 +1,7 @@
 #include "Gestion.h"
 
+using namespace std;
+
 Gestion::Gestion() : proximoIdCancion(1) {
     canciones = new ListaCancion();
     cancionesPorArtista = new AVLCancion();
@@ -16,9 +18,9 @@ Gestion::~Gestion() {
 }
 
 void Gestion::cargarCancionesDesdeArchivo(const char* archivo) {
-    std::ifstream archivo_in(archivo);
+    ifstream archivo_in(archivo);
     if (!archivo_in.is_open()) {
-        std::cout << "No se pudo abrir el archivo: " << archivo << std::endl;
+        cout << "No se pudo abrir el archivo: " << archivo << endl;
         return;
     }
 
@@ -50,13 +52,13 @@ void Gestion::cargarCancionesDesdeArchivo(const char* archivo) {
         ranking->agregarCancionAlRanking(cancion);
     }
     archivo_in.close();
-    std::cout << "Canciones cargadas correctamente." << std::endl;
+    cout << "Canciones cargadas correctamente." << endl;
 }
 
 void Gestion::guardarCancionesEnArchivo(const char* archivo) {
-    std::ofstream archivo_out(archivo);
+    ofstream archivo_out(archivo);
     if (!archivo_out.is_open()) {
-        std::cout << "No se pudo abrir el archivo para guardar: " << archivo << std::endl;
+        cout << "No se pudo abrir el archivo para guardar: " << archivo << endl;
         return;
     }
 
@@ -67,19 +69,19 @@ void Gestion::guardarCancionesEnArchivo(const char* archivo) {
                    << actual->dato->getAlbum() << "|"
                    << actual->dato->getGenero() << "|"
                    << actual->dato->getDuracion() << "|"
-                   << actual->dato->getReproducciones() << std::endl;
+                   << actual->dato->getReproducciones() << endl;
         actual = actual->siguiente;
     }
     archivo_out.close();
-    std::cout << "Canciones guardadas correctamente." << std::endl;
+    cout << "Canciones guardadas correctamente." << endl;
 }
 
 void Gestion::mostrarTodasLasCanciones() {
     if (canciones->estaVacia()) {
-        std::cout << "No hay canciones disponibles." << std::endl;
+        cout << "No hay canciones disponibles." << endl;
         return;
     }
-    std::cout << "\n=== TODAS LAS CANCIONES ===" << std::endl;
+    cout << "\n=== TODAS LAS CANCIONES ===" << endl;
     NodoCancion* actual = canciones->obtenerCabeza();
     while (actual != nullptr) {
         actual->dato->mostrar();
@@ -92,12 +94,12 @@ void Gestion::reproducirCancion(int idCancion) {
     while (actual != nullptr) {
         if (actual->dato->getId() == idCancion) {
             actual->dato->incrementarReproducciones();
-            std::cout << "Reproduciendo: " << actual->dato->getNombre() << std::endl;
+            cout << "Reproduciendo: " << actual->dato->getNombre() << endl;
             return;
         }
         actual = actual->siguiente;
     }
-    std::cout << "Cancion no encontrada." << std::endl;
+    cout << "Cancion no encontrada." << endl;
 }
 
 void Gestion::buscarCancion(const char* prefijo) {
@@ -105,12 +107,12 @@ void Gestion::buscarCancion(const char* prefijo) {
     busqueda->buscarCancionesPorNombre(prefijo, *resultados);
 
     if (resultados->obtenerTamanio() == 0) {
-        std::cout << "No se encontraron canciones con: " << prefijo << std::endl;
+        cout << "No se encontraron canciones con: " << prefijo << endl;
         delete resultados;
         return;
     }
 
-    std::cout << "\n=== RESULTADOS DE BUSQUEDA ===" << std::endl;
+    cout << "\n=== RESULTADOS DE BUSQUEDA ===" << endl;
     NodoCancion* actual = resultados->obtenerCabeza();
     while (actual != nullptr) {
         actual->dato->mostrar();
@@ -125,4 +127,54 @@ void Gestion::mostrarTop10() {
 
 ListaCancion* Gestion::getCanciones() {
     return canciones;
+}
+
+void Gestion::mostrarCancionesDeArtistaAlfabetico(const char* artista) {
+    if (canciones->estaVacia()) return;
+
+    ListaCancion filtradas;
+    NodoCancion* actual = canciones->obtenerCabeza();
+    while (actual != nullptr) {
+        if (strcmp(actual->dato->getArtista(), artista) == 0) {
+            filtradas.agregar(actual->dato);
+        }
+        actual = actual->siguiente;
+    }
+
+    if (filtradas.obtenerTamanio() == 0) {
+        cout << "No se encontraron canciones para el artista: " << artista << endl;
+        return;
+    }
+
+    bool intercambiado;
+    do {
+        intercambiado = false;
+        NodoCancion* nodo = filtradas.obtenerCabeza();
+        while (nodo != nullptr && nodo->siguiente != nullptr) {
+            if (strcmp(nodo->dato->getNombre(), nodo->siguiente->dato->getNombre()) > 0) {
+                Cancion* aux = nodo->dato;
+                nodo->dato = nodo->siguiente->dato;
+                nodo->siguiente->dato = aux;
+                intercambiado = true;
+            }
+            nodo = nodo->siguiente;
+        }
+    } while (intercambiado);
+
+    cout << "Ranking TOP 10 Artistas mas escuchados:\n" << endl;
+    cout << "Artista: " << artista << endl;
+
+    NodoCancion* impresor = filtradas.obtenerCabeza();
+    int i = 1;
+    while (impresor != nullptr) {
+        cout << "  " << i << ". " << impresor->dato->getNombre() << endl;
+        impresor = impresor->siguiente;
+        i++;
+    }
+
+    cout << "\nOpciones:" << endl;
+    cout << "R<num> - Reproducir cancion seleccionada" << endl;
+    cout << "A<num> - Agregar cancion seleccionada al final de la lista de reproduccion actual" << endl;
+    cout << "V - Volver al listado de TOP 10 artistas" << endl;
+    cout << "X - Volver al menu principal" << endl;
 }
