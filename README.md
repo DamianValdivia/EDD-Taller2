@@ -22,8 +22,9 @@ Como no podiamos usar la libreria estándar, todas las estructuras están hechas
 4. **Max-Heap (`HeapCancion.h`)**: Lo uso para ordenar el ranking del Top 10 según la cantidad de reproducciones.
 
 ---
-### Como ejecutar:
-En consola escribir g++ main.cpp classes/*.cpp data_structures/*.cpp -o reproductor
+### Como ejecutar
+
+En consola escribir g++ main.cpp classes/*.cpp data_structures/*.cpp -o reproductor: 
 Luego ./reproductor
 ---
 
