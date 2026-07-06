@@ -32,6 +32,8 @@ public:
     void buscarCancion(const char* prefijo);
     void mostrarTop10();
     ListaCancion* getCanciones();
+    
+    void mostrarCancionesDeArtistaAlfabetico(const char* artista);
 };
 
 #endif // GESTION_H
