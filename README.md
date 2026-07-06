@@ -1,4 +1,5 @@
 # Reproductor de Música C++ (Taller de Estructuras de Datos)
+**Integrantes:** Maximiliano Castillo y Damián Valdivia
 
 Este proyecto consiste en un sistema de reproducción y gestión de música desarrollado en C++. Está diseñado para operar eficientemente en memoria mediante la implementación de estructuras de datos avanzadas hechas a medida, minimizando el uso de la biblioteca estándar (`std`) y priorizando el manejo manual de memoria dinámica con punteros.
 
