@@ -1,79 +1,131 @@
+#include "classes/Gestion.h"
 #include <iostream>
-#include "../classes/Gestion.h"
 #include <cstring>
+#include <cstdlib>
 
 using namespace std;
 
-void mostrarMenu() {
-    cout << "   REPRODUCTOR DE MUSICA   "<< endl;
-    cout << "1. Ver todas las canciones" << endl;
-    cout << "2. Buscar cancion por nombre" << endl;
-    cout << "3. Ver Top 10 canciones" << endl;
-    cout << "4. Reproducir cancion" << endl;
-    cout << "5. Cargar canciones" << endl;
-    cout << "6. Guardar canciones" << endl;
-    cout << "0. Salir" << endl;
-    cout << "Seleccione una opcion: ";
+void limpiarPantalla() {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
 }
 
 int main() {
     Gestion gestion;
-    int opcion;
-    char buffer[256];
+    gestion.cargarCancionesDesdeArchivo("music_source.txt");
 
-    gestion.cargarCancionesDesdeArchivo("../data/music_source.txt");
+    int menuActual = 0;
+    char artistaSeleccionado[256] = "";
+    char comando[50];
+    bool ejecutando = true;
 
-    while (true) {
-        mostrarMenu();
-        cin >> opcion;
-        cin.ignore();
+    while (ejecutando) {
+        limpiarPantalla();
 
-        switch (opcion) {
-            case 1:
+        if (menuActual == 0) {
+            cout << "=== REPRODUCTOR DE MUSICA ===" << endl;
+            cout << "W - Mostrar todas las canciones" << endl;
+            cout << "T - Ver Rankings TOP 10" << endl;
+            cout << "X - Salir" << endl;
+            cout << "\nIngrese opcion: ";
+        } 
+        else if (menuActual == 1) {
+            gestion.mostrarTop10();
+            cout << "\nIngrese comando: ";
+        } 
+        else if (menuActual == 2) {
+            gestion.getRanking()->mostrarTop10Artistas();
+            cout << "\nIngrese opcion (o numero de artista): ";
+        } 
+        else if (menuActual == 3) {
+            gestion.mostrarCancionesDeArtistaAlfabetico(artistaSeleccionado);
+            cout << "\nIngrese comando: ";
+        }
+
+        cin.getline(comando, sizeof(comando));
+
+        if (menuActual == 0) {
+            if (strcasecmp(comando, "W") == 0) {
+                limpiarPantalla();
                 gestion.mostrarTodasLasCanciones();
-                break;
-
-            case 2: {
-                cout << "Ingrese el nombre o parte de la cancion a buscar: ";
-                cin.getline(buffer, sizeof(buffer));
-                gestion.buscarCancion(buffer);
-                break;
+                cout << "\nPresione Enter para continuar...";
+                cin.get();
+            } else if (strcasecmp(comando, "T") == 0) {
+                menuActual = 1;
+            } else if (strcasecmp(comando, "X") == 0) {
+                ejecutando = false;
             }
-
-            case 3:
-                gestion.mostrarTop10();
-                break;
-
-            case 4: {
-                cout << "Ingrese el ID de la cancion: ";
-                int id;
-                cin >> id;
-                gestion.reproducirCancion(id);
-                break;
+        } 
+        else if (menuActual == 1) {
+            if (strcasecmp(comando, "V") == 0) {
+                menuActual = 0;
+            } else if (strcasecmp(comando, "A") == 0) {
+                menuActual = 2;
+            } else if (toupper(comando[0]) == 'R') {
+                int num = atoi(&comando[1]);
+                ListaCancion temp;
+                gestion.getRanking()->obtenerTop10Canciones(temp);
+                NodoCancion* actual = temp.obtenerCabeza();
+                int i = 1;
+                while (actual != nullptr && i < num) {
+                    actual = actual->siguiente;
+                    i++;
+                }
+                if (actual != nullptr) {
+                    limpiarPantalla();
+                    gestion.reproducirCancion(actual->dato->getId());
+                } else {
+                    cout << "Numero invalido." << endl;
+                }
+                cout << "\nPresione Enter para continuar...";
+                cin.get();
+            } else if (toupper(comando[0]) == 'A' && isdigit(comando[1])) {
+                int num = atoi(&comando[1]);
+                cout << "Agregando a la cola cancion Nro: " << num << endl;
+                cout << "\nPresione Enter para continuar...";
+                cin.get();
             }
-
-            case 5: {
-                cout << "Ingrese la ruta del archivo: "; // aqui hay que optimizarlo, pa no tener que pedir la ruta
-                cin.getline(buffer, sizeof(buffer));
-                gestion.cargarCancionesDesdeArchivo(buffer);
-                break;
+        } 
+        else if (menuActual == 2) {
+            if (strcasecmp(comando, "X") == 0) {
+                menuActual = 0;
+            } else if (isdigit(comando[0])) {
+                int idx = atoi(comando);
+                ListaCancion temp;
+                gestion.getRanking()->obtenerTop10Artistas(temp);
+                NodoCancion* actual = temp.obtenerCabeza();
+                int i = 1;
+                while (actual != nullptr && i < idx) {
+                    actual = actual->siguiente;
+                    i++;
+                }
+                if (actual != nullptr) {
+                    strcpy(artistaSeleccionado, actual->dato->getArtista());
+                    menuActual = 3;
+                } else {
+                    cout << "Artista no encontrado." << endl;
+                    cout << "\nPresione Enter para continuar...";
+                    cin.get();
+                }
             }
-
-            case 6: {
-                cout << "Ingrese la ruta del archivo de destino: "; //aqui igual
-                cin.getline(buffer, sizeof(buffer));
-                gestion.guardarCancionesEnArchivo(buffer);
-                break;
+        } 
+        else if (menuActual == 3) {
+            if (strcasecmp(comando, "V") == 0) {
+                menuActual = 2;
+            } else if (strcasecmp(comando, "X") == 0) {
+                menuActual = 0;
+            } else if (toupper(comando[0]) == 'R') {
+                int num = atoi(&comando[1]);
+                cout << "Reproduciendo cancion de artista filtrado Nro: " << num << endl;
+                cout << "\nPresione Enter para continuar...";
+                cin.get();
             }
-
-            case 0:
-                cout << "Cerrando..." << endl;
-                return 0;
-
-            default:
-                cout << "Opcion invalida." << endl;
         }
     }
 
+    gestion.guardarCancionesEnArchivo("music_source.txt");
     return 0;
 }
